@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Planner - MealMaster</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Dancing+Script:wght@700&family=Cormorant+Infant:wght@500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            background-image: url(image/Bg.jpeg);
+            background-repeat: no-repeat; 
+            background-size: cover; 
+            background-position: center; 
+            /* Chill vibes for the background */
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: bold;
+            font-family: 'Cormorant Infant', serif;
+        }
+
+        .navbar-brand span {
+            color: #b22222; 
+        }
+
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-menu a {
+            text-decoration: none;
+            color: #6c757d;
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .navbar-menu a::before {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #b22222;
+            transition: width 0.3s;
+        }
+
+        .navbar-menu a:hover::before,
+        .navbar-menu a.active::before {
+            width: 100%;
+        }
+
+        .btn-red {
+            background-color: #b22222;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px; 
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn-red:hover {
+            background-color: #8b0000;
+        }
+
+        .plannerform {
+            display: flex;
+            gap: 40px;
+            width: 100%;
+            max-width: 1200px;
+            padding-top: 30px;
+            margin-left: 40px;
+        }
+
+        .meal-planner {
+            flex: 1;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .meal {
+            margin-bottom: 20px;
+        }
+
+        .meal label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .meal input,
+        .meal select,
+        .meal textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            background-color: #fafafa;
+            transition: border-color 0.3s;
+        }
+
+        .meal input:focus,
+        .meal select:focus,
+        .meal textarea:focus {
+            border-color: #d35400;
+            outline: none;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .buttons button {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn-create { background-color: #27ae60; }
+        .btn-update { background-color: #f39c12; }
+
+        .btn-display-meal, .btn-delete-meal, .btn-delete-recipe {
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        .btn-display-meal {
+            background-color: #4CAF50; /* Green */
+        }
+
+        .btn-display-meal:hover {
+            background-color: #45a049; /* Darker green */
+        }
+
+        .btn-delete-meal, .btn-delete-recipe {
+            background-color: #f44336; /* Red */
+        }
+
+        .btn-delete-meal:hover, .btn-delete-recipe:hover {
+            background-color: #e53935; /* Darker red */
+        }
+
+
+        .buttons button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .planner-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .planner-table th {
+            padding: 12px;
+            background-color: #f3f3f3;
+            border: 1px solid #ddd;
+            color: #333;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .planner-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            color: #555;
+        }
+
+        .saved-recipes {
+            flex: 0.5;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .saved-recipes h2 {
+            color: #d35400;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+        }
+
+        .saved-recipes table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .saved-recipes th {
+            padding: 12px;
+            background-color: #f3f3f3;
+            border: 1px solid #ddd;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .saved-recipes td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            color: #555;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: #333;
+            color: white;
+            margin-top: 140px;
+        }
+
+        .footer a {
+            color: #d35400;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-brand">MealMaster<span> :)</span></div>
+        <nav class="navbar-menu">
+            <a href="index.html">Home</a>
+            <a href="mealplanner.html" class="active">Meal Planner</a>
+            <a href="grocery.html">Grocery Notes</a>
+            <a href="searchopt.html">
+                <button class="btn-red">What to cook today?</button>
+            </a>
+        </nav>
+    </header>
+
+    <div class="content">
+        <div class="mainWrapper">
+            <div class="plannerform">
+                <div class="meal-planner">
+                    <div class="meal">
+                        <label for="mealName">Meal Plan:</label>
+                        <textarea id="mealName" placeholder="Enter meal name" rows="5"></textarea>
+                    </div>
+                    
+                    <div class="meal">
+                        <label for="mealDate">Date:</label>
+                        <input type="date" id="mealDate">
+                    </div>
+                    <div class="meal">
+                        <label for="mealType">Meal Type:</label>
+                        <select id="mealType">
+                            <option value="breakfast">Breakfast</option>
+                            <option value="lunch">Lunch</option>
+                            <option value="dinner">Dinner</option>
+                        </select>
+                    </div>
+                    <div class="buttons">
+                        <button class="btn-create" id="btnCreate">Add</button>
+                        <button class="btn-update" id="btnUpdate">Update</button>
+                    </div>
+                    <table class="planner-table" id="plannerTable">
+                        <thead>
+                            <tr>
+                                <th>Meal Name</th>
+                                <th>Date</th>
+                                <th>Meal Type</th>
+                                <th>Option</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Planned meals  here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="saved-recipes">
+                    <h2>Recipes Interested</h2>
+                    <table id="savedRecipesTable">
+                        <thead>
+                            <tr>
+                                <th>Recipe Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Recipe name -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 MealMaster. All rights reserved.</p>
+    </footer>
+
+    <script src="planner.js"></script>
+</body>
+</html>
